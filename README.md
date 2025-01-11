@@ -1,1 +1,1 @@
-# pointbleu
+# webpack-template

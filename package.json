@@ -1,0 +1,41 @@
+{
+  "name": "pointbleu",
+  "version": "1.0.0",
+  "description": "gsap animation file",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --mode development --hot",
+    "build": "webpack --mode production --progress",
+    "deploy": "gh-pages -d build",
+    "prod": "npm run build && npm run deploy"
+  },
+  "homepage": "https://github.com/pavel-khenkin-webflow/pointbleu#readme",
+  "dependencies": {
+    "gh-pages": "^5.0.0",
+    "gsap": "npm:@gsap/shockingly@^3.12.5",
+    "swiper": "^11.1.15"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.0",
+    "@babel/preset-env": "^7.20.2",
+    "babel-loader": "^9.1.2",
+    "clean-webpack-plugin": "^4.0.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "engines": {
+    "node": "=14.17.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavel-khenkin-webflow/pointbleu.git"
+  },
+  "author": "gapsy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pavel-khenkin-webflow/pointbleu/issues"
+  }
+}
