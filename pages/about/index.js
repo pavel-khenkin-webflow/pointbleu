@@ -7,49 +7,115 @@ function init() {
   const logoSmall = document.querySelector('.header_logo-small');
   const logoLarge = document.querySelector('.header_logo-large');
   const mindTitle = document.querySelector('.main_content');
-  let lastScrollTop = 0;
-  let lastDirection = null; // Последнее направление: 'down' или 'up'
 
-  // Инициализация начального положения хедера
+  let lastScrollTop = 0;
+  let lastDirection = null;
+  let isAnimating = false;
+  let isHeaderHidden = false;
+  let hasScrolled = false; // Флаг, был ли скролл после загрузки страницы
+  let delayTimeout = null;
+  let ticking = false;
+
+  const threshold = 3 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+
+  // Устанавливаем начальное положение хедера
   gsap.set(navComponent, { y: '0%' });
 
-  // Функция для анимации хедера при скролле
   function handleScroll() {
-    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-    const direction = currentScroll > lastScrollTop ? 'down' : 'up';
+    if (!hasScrolled) return; // Запуск анимации только после первого ручного скролла
 
-    // Обновляем lastScrollTop на каждой итерации
-    lastScrollTop = currentScroll;
+    // ФИКС: Если бургер-меню открыто, хедер не скрываем
+    if (document.body.classList.contains('is--locked')) {
+      gsap.to(navComponent, { y: 0, duration: 0.2, ease: "linear" });
+      isHeaderHidden = false;
+      return;
+    }
 
-    // Если направление не изменилось, ничего не делаем
-    if (direction === lastDirection) return;
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        const direction = currentScroll > lastScrollTop ? 'down' : 'up';
 
-    // Обновляем направление
-    lastDirection = direction;
+        lastScrollTop = currentScroll;
 
-    const tl = gsap.timeline();
+        if (currentScroll <= threshold) {
+          if (!isHeaderHidden) {
+            ticking = false;
+            return;
+          }
 
-    if (direction === 'down') {
-      // Скролл вниз - скрыть хедер и переключить лого
-      tl.to(logoLarge, { width: '2.125em', duration: 0.35, ease: "linear" })
-        .to(logoLarge, { opacity: 0, duration: 0.2 })
-        .to(logoSmall, { opacity: 1, duration: 0.2 }, '-=0.2')
-        .to(navComponent, { y: '-100%', duration: 0.2, ease: "linear" });
-    } else if (direction === 'up') {
-      // Скролл вверх - показать хедер и переключить лого
-      tl.to(navComponent, { y: 0, duration: 0.2, ease: "linear" })
-        /*.to(logoSmall, { opacity: 0, duration: 0.2 })
-        .to(logoLarge, { opacity: 1, duration: 0.2 }, '-=0.2')
-        .to(logoLarge, { width: 'auto', duration: 0.35, ease: "linear" });*/
+          gsap.to(navComponent, { y: 0, duration: 0.2, ease: "linear" });
+          isHeaderHidden = false;
+          lastDirection = null;
+          ticking = false;
+          return;
+        }
+
+        if (direction === lastDirection || delayTimeout || isAnimating) {
+          ticking = false;
+          return;
+        }
+
+        lastDirection = direction;
+        isAnimating = true;
+
+        const tl = gsap.timeline({
+          onComplete: () => {
+            isAnimating = false;
+            if (window.pageYOffset <= threshold) {
+              gsap.to(navComponent, { y: 0, duration: 0.2, ease: "linear" });
+              isHeaderHidden = false;
+              lastDirection = null;
+            }
+          }
+        });
+
+        if (direction === 'down') {
+          tl.to(logoLarge, { width: '2.125em', duration: 0.35, ease: "linear" })
+            .to(logoLarge, { opacity: 0, duration: 0.2 })
+            .to(logoSmall, { opacity: 1, duration: 0.2 }, '+=0.1')
+            .to(navComponent, { y: '-100%', duration: 0.2, ease: "linear", delay: 0.5 })
+            .add(() => { isHeaderHidden = true; });
+        } else {
+          tl.to(navComponent, { y: 0, duration: 0.2, ease: "linear" })
+            .add(() => { isHeaderHidden = false; });
+        }
+
+        delayTimeout = setTimeout(() => {
+          delayTimeout = null;
+        }, 1000);
+
+        ticking = false;
+      });
+
+      ticking = true;
     }
   }
 
-  // Инициализация ScrollTrigger для изменения фона хедера
+  // === ScrollTrigger для изменения фона хедера ===
   ScrollTrigger.create({
     trigger: '.section_hero',
     start: 'bottom top',
     onEnter: () => gsap.to(navComponent, { backgroundColor: '#fff', duration: 0.4, ease: 'power1.out' }),
     onEnterBack: () => gsap.to(navComponent, { backgroundColor: 'transparent', duration: 0.4, ease: 'power1.out' }),
+  });
+
+  // Проверяем положение скролла после загрузки страницы
+  window.addEventListener('load', function () {
+    if (window.pageYOffset > threshold) {
+      gsap.set(navComponent, { y: 0 });
+      isHeaderHidden = false;
+      hasScrolled = false; // Сбрасываем флаг
+    }
+  });
+
+  // Запускаем скрытие хедера **только после первого ручного скролла**
+  window.addEventListener('scroll', function () {
+    if (!hasScrolled) {
+      hasScrolled = true; // Фиксируем первый скролл
+      return;
+    }
+    handleScroll();
   });
 
   // Функция для анимации слайдера "mind"
@@ -81,7 +147,6 @@ function init() {
   }
 
   // Инициализация событий
-  window.addEventListener('scroll', handleScroll);
   window.addEventListener('resize', debounce(updateMindTitlePosition, 200));
 
   // Вызов функции для первой инициализации
