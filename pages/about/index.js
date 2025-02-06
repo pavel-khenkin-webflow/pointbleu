@@ -3,33 +3,25 @@ import { gsap, ScrollTrigger, SplitText } from 'gsap/all';
 function init() {
   gsap.registerPlugin(ScrollTrigger, SplitText);
   let mm = gsap.matchMedia();
+  const mindTitle = document.querySelector('.main_content');
+
+  // === Header Animation ===
   const navComponent = document.querySelector('.header');
   const logoSmall = document.querySelector('.header_logo-small');
   const logoLarge = document.querySelector('.header_logo-large');
-  const mindTitle = document.querySelector('.main_content');
 
   let lastScrollTop = 0;
   let lastDirection = null;
+  let ticking = false;
+  let delayTimeout = null;
   let isAnimating = false;
   let isHeaderHidden = false;
   let hasScrolled = false; // Флаг, был ли скролл после загрузки страницы
-  let delayTimeout = null;
-  let ticking = false;
 
   const threshold = 3 * parseFloat(getComputedStyle(document.documentElement).fontSize);
 
-  // Устанавливаем начальное положение хедера
-  gsap.set(navComponent, { y: '0%' });
-
   function handleScroll() {
-    if (!hasScrolled) return; // Запуск анимации только после первого ручного скролла
-
-    // ФИКС: Если бургер-меню открыто, хедер не скрываем
-    if (document.body.classList.contains('is--locked')) {
-      gsap.to(navComponent, { y: 0, duration: 0.2, ease: "linear" });
-      isHeaderHidden = false;
-      return;
-    }
+    if (!hasScrolled) return; // Не запускаем анимацию, пока пользователь не начал скроллить
 
     if (!ticking) {
       requestAnimationFrame(() => {
@@ -92,10 +84,37 @@ function init() {
     }
   }
 
+  // === Burger Menu Animation Pause ===
+  function toggleAnimationsBasedOnLock() {
+    const headerMenu = document.querySelector('.header_menu');
+    if (!headerMenu) return; // Проверяем, существует ли элемент
+
+    console.log('MutationObserver: Класс изменился на', headerMenu.classList.value);
+
+    if (headerMenu.classList.contains('is--active')) {
+      console.log('🛑 GSAP анимации ПАУЗА: is--active активен');
+      gsap.globalTimeline.pause(); // Останавливаем все GSAP-анимации
+      gsap.to(navComponent, { y: 0, duration: 0.2, ease: "linear" }); // Показываем хедер
+      isHeaderHidden = false;
+    } else {
+      console.log('▶️ GSAP анимации ВОЗОБНОВЛЕНЫ: is--active удален');
+      gsap.globalTimeline.resume(); // Возобновляем все GSAP-анимации
+    }
+  }
+
+  // Проверяем, существует ли `.header_menu`, прежде чем создавать observer
+  const headerMenu = document.querySelector('.header_menu');
+  if (headerMenu) {
+    const observer = new MutationObserver(() => toggleAnimationsBasedOnLock());
+    observer.observe(headerMenu, { attributes: true, attributeFilter: ['class'] });
+  } else {
+    console.warn('⚠️ Warning: .header_menu не найден. Observer не запущен.');
+  }
+
   // === ScrollTrigger для изменения фона хедера ===
   ScrollTrigger.create({
     trigger: '.section_hero',
-    start: 'bottom top',
+    start: 'bottom top', // Фон хедера появляется в начале блока main_content
     onEnter: () => gsap.to(navComponent, { backgroundColor: '#fff', duration: 0.4, ease: 'power1.out' }),
     onEnterBack: () => gsap.to(navComponent, { backgroundColor: 'transparent', duration: 0.4, ease: 'power1.out' }),
   });
@@ -117,6 +136,8 @@ function init() {
     }
     handleScroll();
   });
+
+  // === Other Animations ===
 
   // Функция для анимации слайдера "mind"
   function updateMindTitlePosition() {
