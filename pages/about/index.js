@@ -177,9 +177,9 @@ function init() {
   const phTitle = new SplitText('[da="about-title"]', { type: 'words, chars' });
   const phTl = gsap.timeline({
     scrollTrigger: {
-      trigger: '.philosophy_trigger',
-      start: 'top+=5% top',
-      end: 'bottom bottom',
+      trigger: '.philosophy_top-left',
+      start: 'top center',
+      end: '80% center',
       scrub: 1,
     },
   });
@@ -207,20 +207,21 @@ function init() {
         });
       });
       // Support
+      
       const supTl = gsap.timeline({
         scrollTrigger: {
           trigger: '.section_charity',
           start: 'top center',
-          end: 'bottom center',
+          end: 'center center',
           scrub: 2,
         },
       });
-      supTl.to('.charity_container', {
+      /*supTl.to('.charity_container', {
         clipPath: 'polygon(-50% 0, 150% 0, 150% 100%, -50% 100%)',
         transform: 'translateZ(0)',
         duration: 1,
         ease: 'power1.out',
-      });
+      });*/
       supTl.to(
         '.charity_content',
         {
@@ -231,6 +232,7 @@ function init() {
         '<'
       );
     }
+    
   );
   mm.add(
     {
@@ -288,26 +290,41 @@ function init() {
   // Team section
   const teamTl = gsap.timeline({
     scrollTrigger: {
-      trigger: '.team_trigger',
-      start: 'top top',
-      end: 'bottom bottom',
+      trigger: '.team_content',
+      start: '30% bottom',
+      end: 'bottom center',
       scrub: 1,
     },
   });
   teamTl.to('.team_line', {
-    x: '20%',
+    x: '110%',
     duration: 1,
     ease: 'none',
   });
   teamTl.to(
     '.team_line-reverse',
     {
-      x: '-20%',
+      x: '-40%',
       duration: 1,
       ease: 'none',
     },
     0
   );
+// Разделяем текст на слова
+const teamLine = new SplitText('.team_line', { type: 'words' });
+
+// Добавляем класс для изменения цвета при наведении
+teamLine.words.forEach(word => {
+  word.classList.add('hoverable-word');
+});
+// Разделяем текст на слова для .team_line-reverse
+const teamLineReverse = new SplitText('.team_line-reverse', { type: 'words' });
+
+// Добавляем класс для изменения цвета при наведении
+teamLineReverse.words.forEach(word => {
+  word.classList.add('hoverable-word');
+});
+  
 }
 
 document.addEventListener('DOMContentLoaded', init);
