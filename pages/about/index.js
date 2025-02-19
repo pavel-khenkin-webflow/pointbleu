@@ -216,6 +216,7 @@ function init() {
           scrub: 2,
         },
       });
+      //charity large
       /*supTl.to('.charity_container', {
         clipPath: 'polygon(-50% 0, 150% 0, 150% 100%, -50% 100%)',
         transform: 'translateZ(0)',
