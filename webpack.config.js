@@ -9,6 +9,7 @@ module.exports = {
 	},
 	entry: {
 		about: './pages/about/index.js',
+		contact: './pages/contact/index.js',
 	},
 	output: {
 		path: path.join(__dirname, '/build'),
