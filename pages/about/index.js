@@ -184,11 +184,11 @@ function init() {
     },
   });
   phTl.to(phTitle.chars, {
-    color: 'var(--text-colors--primary-dark)',
+    color: '#3B52FB',
     stagger: 0.3,
     ease: 'none',
   });
-
+  /*=========== Our Focus ===========*/
   // Cards
   const phCards = document.querySelectorAll('.philosophy_card');
   mm.add(
@@ -288,6 +288,17 @@ function init() {
       );
     }
   );
+/* ======== Our Focus ========*/
+
+
+
+
+
+
+
+
+
+
   // Team section
   const teamTl = gsap.timeline({
     scrollTrigger: {
