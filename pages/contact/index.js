@@ -106,7 +106,7 @@ function init() {
     handleScroll();
   });
 
-  // ✅ Анимация изменения фона хедера при скролле
+  // Анимация изменения фона хедера при скролле
   ScrollTrigger.create({
     trigger: '.section_hero',
     start: 'bottom top',
@@ -119,7 +119,7 @@ function init() {
     markers: false // Убери, если нужны маркеры для отладки
   });
 
-  // ✅ Анимация SplitText для текста
+  // Анимация SplitText для текста
   const splitTextElement = document.querySelector('[data-split="text"]');
   if (splitTextElement) {
     const splitTextInstance = new SplitText(splitTextElement, { type: 'words, chars' });
