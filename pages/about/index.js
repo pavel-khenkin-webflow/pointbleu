@@ -191,23 +191,57 @@ function init() {
   /*=========== Our Focus ===========*/
   // Cards
   const phCards = document.querySelectorAll('.philosophy_card');
+
   mm.add(
     {
       isDesktop: '(min-width: 767px)',
     },
-    context => {
+    (context) => {
+      // Добавляем класс is--active для третьей карточки
       phCards[2].classList.add('is--active');
-      phCards.forEach(card => {
-        const cardTitle = card.querySelector('.philosophy_card .h3');
+  
+      phCards.forEach((card) => {
+        const cardTitle = card.querySelector('.h3');
+        const originalFontSize = window.getComputedStyle(cardTitle).fontSize; // Получаем исходный размер
+  
         card.addEventListener('mouseenter', function () {
           // Удаляем класс is--active у всех карточек
-          phCards.forEach(c => c.classList.remove('is--active'));
+          phCards.forEach((c) => c.classList.remove('is--active'));
+  
+          // Возвращаем всем заголовкам исходный размер
+          phCards.forEach((c) => {
+            const title = c.querySelector('.h3');
+            gsap.to(title, {
+              fontSize: originalFontSize,
+              duration: 0.4,
+              ease: 'power1.out',
+            });
+          });
+  
+          // Добавляем класс is--active текущей карточке
           card.classList.add('is--active');
+  
+          // Увеличиваем размер h3
+          gsap.to(cardTitle, {
+            fontSize: '3.375em',
+            duration: 0.4,
+            ease: 'power1.out',
+          });
+  
           ScrollTrigger.refresh();
         });
+  
+        card.addEventListener('mouseleave', function () {
+          // Возвращаем исходный размер h3 при уходе курсора
+          gsap.to(cardTitle, {
+            fontSize: originalFontSize,
+            duration: 0.4,
+            ease: 'power1.out',
+          });
+        });
       });
-      // Support
-      
+  
+      // Support - блок с анимацией .charity_content
       const supTl = gsap.timeline({
         scrollTrigger: {
           trigger: '.section_charity',
@@ -216,13 +250,7 @@ function init() {
           scrub: 2,
         },
       });
-      //charity large
-      /*supTl.to('.charity_container', {
-        clipPath: 'polygon(-50% 0, 150% 0, 150% 100%, -50% 100%)',
-        transform: 'translateZ(0)',
-        duration: 1,
-        ease: 'power1.out',
-      });*/
+  
       supTl.to(
         '.charity_content',
         {
@@ -233,25 +261,27 @@ function init() {
         '<'
       );
     }
-    
   );
+  
   mm.add(
     {
       isDesktop: '(max-width: 766px)',
     },
-    context => {
+    (context) => {
       function mobCardInit() {
         phCards[0].classList.add('is--active');
         console.log('Class added, waiting for resize...');
       }
-
-      // Создаём ResizeObserver
+  
+      // Создаём ResizeObserver для отслеживания изменений высоты секции
       const observer = new ResizeObserver(() => {
         ScrollTrigger.refresh(); // Обновляем триггеры
         console.log('Height changed, ScrollTrigger refreshed!');
       });
+  
       const section = document.querySelector('.section_philosophy');
       observer.observe(section);
+  
       setTimeout(() => {
         mobCardInit();
         setTimeout(() => {
@@ -259,16 +289,40 @@ function init() {
           console.log('Observer disconnected.');
         }, 2000);
       }, 1000);
-
-      phCards.forEach(card => {
+  
+      phCards.forEach((card) => {
+        const cardTitle = card.querySelector('.h3');
+        const originalFontSize = window.getComputedStyle(cardTitle).fontSize; // Получаем исходный размер h3
+  
         card.addEventListener('click', function () {
           // Удаляем класс is--active у всех карточек
-          phCards.forEach(c => c.classList.remove('is--active'));
+          phCards.forEach((c) => c.classList.remove('is--active'));
+  
+          // Возвращаем всем заголовкам их исходный размер
+          phCards.forEach((c) => {
+            const title = c.querySelector('.h3');
+            gsap.to(title, {
+              fontSize: originalFontSize,
+              duration: 0.4,
+              ease: 'power1.out',
+            });
+          });
+  
+          // Добавляем класс is--active к текущей карточке
           card.classList.add('is--active');
+  
+          // Увеличиваем размер h3
+          gsap.to(cardTitle, {
+            fontSize: '3em',
+            duration: 0.4,
+            ease: 'power1.out',
+          });
+  
           ScrollTrigger.refresh();
         });
       });
-      // Support
+  
+      // Support - анимация .charity_content
       const supTl = gsap.timeline({
         scrollTrigger: {
           trigger: '.section_charity',
@@ -277,6 +331,7 @@ function init() {
           scrub: 2,
         },
       });
+  
       supTl.to(
         '.charity_content',
         {
@@ -288,6 +343,7 @@ function init() {
       );
     }
   );
+  
 /* ======== Our Focus ========*/
 
 
