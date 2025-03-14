@@ -10,6 +10,7 @@ module.exports = {
 	entry: {
 		about: './pages/about/index.js',
 		contact: './pages/contact/index.js',
+		home: './pages/home/index.js',
 	},
 	output: {
 		path: path.join(__dirname, '/build'),
