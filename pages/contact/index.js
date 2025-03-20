@@ -128,9 +128,9 @@ function init() {
       color: "#3B52FB",
       stagger: 0.1,
       scrollTrigger: {
-        trigger: ".contact_content",
+        trigger: ".contact_col-1",
         start: "top center",
-        end: "80% center",
+        end: "bottom center",
         scrub: 1,
       },
     });
