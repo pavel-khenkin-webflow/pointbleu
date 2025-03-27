@@ -4,6 +4,7 @@ function init() {
   gsap.registerPlugin(ScrollTrigger, SplitText);
   let mm = gsap.matchMedia();
   const mindTitle = document.querySelector('.main_content');
+  const isMobile = window.innerWidth < 479;
 
   // === Header Animation ===
   const navComponent = document.querySelector('.header');
@@ -173,21 +174,36 @@ function init() {
   // Вызов функции для первой инициализации
   updateMindTitlePosition();
   
-  // about
-  const phTitle = new SplitText('[da="about-title"]', { type: 'words, chars' });
-  const phTl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '.philosophy_top-left',
-      start: 'top center',
-      end: '80% center',
-      scrub: 1,
-    },
-  });
-  phTl.to(phTitle.chars, {
-    color: '#3B52FB',
-    stagger: 0.3,
-    ease: 'none',
-  });
+  if (!isMobile) {
+      const phTitle = new SplitText('[da="about-title"]', { type: 'words, chars' });
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.philosophy_top-left',
+          start: 'top center',
+          end: '80% center',
+          scrub: 1,
+        },
+      }).to(phTitle.chars, {
+        color: '#3B52FB',
+        stagger: 0.3,
+        ease: 'none',
+      });
+    } else {
+      const phTitleMobile = new SplitText('[da="about-title-mobile"]', { type: 'words, chars' });
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.philosophy_top-left',
+          start: 'top center',
+          end: 'bottom center',
+          scrub: 1,
+        },
+      }).to(phTitleMobile.chars, {
+        color: '#3B52FB',
+        stagger: 0.3,
+        ease: 'none',
+      });
+    }
+
   /*=========== Our Focus ===========*/
   // Cards
   const phCards = document.querySelectorAll('.philosophy_card');

@@ -3,7 +3,6 @@ import { gsap, ScrollTrigger, SplitText } from 'gsap/all';
 function init() {
   gsap.registerPlugin(ScrollTrigger, SplitText);
   let mm = gsap.matchMedia();
-  const mindTitle = document.querySelector('.main_content');
 
   // === Header Animation ===
   const navComponent = document.querySelector('.header');
@@ -151,23 +150,42 @@ function init() {
       timeout = setTimeout(() => func.apply(context, args), delay);
     };
   }
-
-
   
-  // about
-  const designText = new SplitText('.text-128', { type: 'words, chars' });
-  const designTl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '.section_mind',
-      start: 'top center',
-      end: '80% center',
-      scrub: 1,
+// Design THAT LEVATES...=============
+  mm.add({
+    // Десктоп
+    "(min-width: 480px)": () => {
+      const designText = new SplitText('.text-128', { type: 'words, chars' });
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.section_mind',
+          start: 'top center',
+          end: '80% center',
+          scrub: 1,
+        },
+      }).to(designText.chars, {
+        color: '#3B52FB',
+        stagger: 0.3,
+        ease: 'none',
+      });
     },
-  });
-  designTl.to(designText.chars, {
-    color: '#3B52FB',
-    stagger: 0.3,
-    ease: 'none',
+  
+    // Мобильные устройства
+    "(max-width: 479px)": () => {
+      const designText = new SplitText('.text-128', { type: 'words, chars' });
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.section_mind',
+          start: 'top 25%',
+          end: 'bottom 35%',
+          scrub: 1,
+        },
+      }).to(designText.chars, {
+        color: '#3B52FB',
+        stagger: 0.3,
+        ease: 'none',
+      });
+    }
   });
 
 
