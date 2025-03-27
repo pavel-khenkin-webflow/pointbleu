@@ -3,6 +3,7 @@ import { gsap, ScrollTrigger, SplitText } from 'gsap/all';
 function init() {
   gsap.registerPlugin(ScrollTrigger, SplitText);
   let mm = gsap.matchMedia();
+  const isMobile = window.innerWidth < 479;
 
   // === Header Animation ===
   const navComponent = document.querySelector('.header');
@@ -151,45 +152,45 @@ function init() {
     };
   }
   
-// Design THAT LEVATES...=============
-  mm.add({
-    // Десктоп
-    "(min-width: 480px)": () => {
-      const designText = new SplitText('.text-128', { type: 'words, chars' });
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '.section_mind',
-          start: 'top center',
-          end: '80% center',
-          scrub: 1,
-        },
-      }).to(designText.chars, {
-        color: '#3B52FB',
-        stagger: 0.3,
-        ease: 'none',
-      });
-    },
-  
-    // Мобильные устройства
-    "(max-width: 479px)": () => {
-      const designText = new SplitText('.text-128', { type: 'words, chars' });
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '.section_mind',
-          start: 'top 25%',
-          end: 'bottom 35%',
-          scrub: 1,
-        },
-      }).to(designText.chars, {
-        color: '#3B52FB',
-        stagger: 0.3,
-        ease: 'none',
-      });
-    }
+  // Design THAT LEVATES...=============
+  const split = new SplitText(".text-128", {
+    type: "chars",
+    charsClass: "char" // добавим класс для стилизации
+  });
+
+  // Обязательно устанавливаем display: inline для каждого символа
+  split.chars.forEach((char) => {
+    char.style.display = "inline";
   });
 
 
-  
+  mm.add(
+    {
+      isMobile: "(max-width: 479px)",
+      isDesktop: "(min-width: 480px)",
+    },
+    (context) => {
+      let { isMobile } = context.conditions;
+
+      gsap.to(
+        split.chars,
+        {
+          color: "#3B52FB",
+          opacity: 1,
+          y: 0,
+          stagger: 0.05,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".section_mind",
+            start: isMobile ? "top 25%" : "top center",
+            end: isMobile ? "bottom 50%" : "bottom center",
+            toggleActions: "play none none reverse",
+            scrub: 1,
+          },
+        }
+      );
+    }
+  );
 }
 
 document.addEventListener('DOMContentLoaded', init);
