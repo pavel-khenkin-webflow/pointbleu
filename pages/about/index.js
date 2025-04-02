@@ -114,9 +114,9 @@ function init() {
 
   // === ScrollTrigger для изменения фона хедера ===
   ScrollTrigger.create({
-    trigger: '.section_hero',
+    trigger: '.section_about-hero',
     start: 'bottom top', // Фон хедера появляется в начале блока main_content
-    onEnter: () => gsap.to(navComponent, { backgroundColor: '#fff', duration: 0.4, ease: 'power1.out' }),
+    onEnter: () => gsap.to(navComponent, { backgroundColor: '#0c0542', duration: 0.4, ease: 'power1.out' }),
     onEnterBack: () => gsap.to(navComponent, { backgroundColor: 'transparent', duration: 0.4, ease: 'power1.out' }),
   });
 
@@ -137,6 +137,7 @@ function init() {
     }
     handleScroll();
   });
+
 
   // === Other Animations ===
 
