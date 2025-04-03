@@ -155,7 +155,8 @@ function init() {
   // Design THAT LEVATES...=============
   const split = new SplitText(".text-128", {
     type: "chars",
-    charsClass: "char" // добавим класс для стилизации
+    charsClass: "char", // добавим класс для стилизации
+    tag: "span"
   });
 
   // Обязательно устанавливаем display: inline для каждого символа
