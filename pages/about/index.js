@@ -176,34 +176,50 @@ function init() {
   updateMindTitlePosition();
   
   if (!isMobile) {
-      const phTitle = new SplitText('[da="about-title"]', { type: 'words, chars' });
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '.philosophy_top-left',
-          start: 'top center',
-          end: '80% center',
-          scrub: 1,
-        },
-      }).to(phTitle.chars, {
-        color: '#3B52FB',
-        stagger: 0.3,
-        ease: 'none',
-      });
-    } else {
-      const phTitleMobile = new SplitText('[da="about-title-mobile"]', { type: 'words, chars' });
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '.philosophy_top-left',
-          start: 'top center',
-          end: 'bottom center',
-          scrub: 1,
-        },
-      }).to(phTitleMobile.chars, {
-        color: '#3B52FB',
-        stagger: 0.3,
-        ease: 'none',
-      });
-    }
+    const phTitle = new SplitText('[da="about-title"]', { type: 'words, chars', tag: 'span' });
+  
+    // Применяем отступ к символам с точкой
+    phTitle.chars.forEach(char => {
+      if (char.textContent === '.') {
+        char.style.marginLeft = '-0.08em';
+      }
+    });
+  
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: '.philosophy_top-left',
+        start: 'top center',
+        end: '80% center',
+        scrub: 1,
+      },
+    }).to(phTitle.chars, {
+      color: '#3B52FB',
+      stagger: 0.3,
+      ease: 'none',
+    });
+  } else {
+    const phTitleMobile = new SplitText('[da="about-title-mobile"]', { type: 'words, chars', tag: 'span' });
+  
+    phTitleMobile.chars.forEach(char => {
+      if (char.textContent === '.') {
+        char.style.marginLeft = '-0.08em';
+      }
+    });
+  
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: '.philosophy_top-left',
+        start: 'top center',
+        end: 'bottom center',
+        scrub: 1,
+      },
+    }).to(phTitleMobile.chars, {
+      color: '#3B52FB',
+      stagger: 0.3,
+      ease: 'none',
+    });
+  }
+  
 
   /*=========== Our Focus ===========*/
   // Cards
@@ -214,42 +230,41 @@ function init() {
       isDesktop: '(min-width: 767px)',
     },
     (context) => {
-      // Добавляем класс is--active для третьей карточки
       phCards[2].classList.add('is--active');
-  
+
       phCards.forEach((card) => {
         const cardTitle = card.querySelector('.h3');
-        const originalFontSize = window.getComputedStyle(cardTitle).fontSize; // Получаем исходный размер
-  
+        const originalFontSize = window.getComputedStyle(cardTitle).fontSize;
+        let hoverTimeout;
+
         card.addEventListener('mouseenter', function () {
-          // Удаляем класс is--active у всех карточек
-          phCards.forEach((c) => c.classList.remove('is--active'));
-  
-          // Возвращаем всем заголовкам исходный размер
-          phCards.forEach((c) => {
-            const title = c.querySelector('.h3');
-            gsap.to(title, {
-              fontSize: originalFontSize,
+          hoverTimeout = setTimeout(() => {
+            phCards.forEach((c) => c.classList.remove('is--active'));
+
+            phCards.forEach((c) => {
+              const title = c.querySelector('.h3');
+              gsap.to(title, {
+                fontSize: originalFontSize,
+                duration: 0.4,
+                ease: 'power1.out',
+              });
+            });
+
+            card.classList.add('is--active');
+
+            gsap.to(cardTitle, {
+              fontSize: '3.375em',
               duration: 0.4,
               ease: 'power1.out',
             });
-          });
-  
-          // Добавляем класс is--active текущей карточке
-          card.classList.add('is--active');
-  
-          // Увеличиваем размер h3
-          gsap.to(cardTitle, {
-            fontSize: '3.375em',
-            duration: 0.4,
-            ease: 'power1.out',
-          });
-  
-          ScrollTrigger.refresh();
+
+            ScrollTrigger.refresh();
+          }, 150);
         });
-  
+
         card.addEventListener('mouseleave', function () {
-          // Возвращаем исходный размер h3 при уходе курсора
+          clearTimeout(hoverTimeout);
+
           gsap.to(cardTitle, {
             fontSize: originalFontSize,
             duration: 0.4,
@@ -257,8 +272,7 @@ function init() {
           });
         });
       });
-  
-      // Support - блок с анимацией .charity_content
+
       const supTl = gsap.timeline({
         scrollTrigger: {
           trigger: '.section_charity',
@@ -267,7 +281,7 @@ function init() {
           scrub: 2,
         },
       });
-  
+
       supTl.to(
         '.charity_content',
         {
@@ -279,7 +293,7 @@ function init() {
       );
     }
   );
-  
+
   mm.add(
     {
       isDesktop: '(max-width: 766px)',
@@ -289,16 +303,15 @@ function init() {
         phCards[0].classList.add('is--active');
         console.log('Class added, waiting for resize...');
       }
-  
-      // Создаём ResizeObserver для отслеживания изменений высоты секции
+
       const observer = new ResizeObserver(() => {
-        ScrollTrigger.refresh(); // Обновляем триггеры
+        ScrollTrigger.refresh();
         console.log('Height changed, ScrollTrigger refreshed!');
       });
-  
+
       const section = document.querySelector('.section_philosophy');
       observer.observe(section);
-  
+
       setTimeout(() => {
         mobCardInit();
         setTimeout(() => {
@@ -306,16 +319,14 @@ function init() {
           console.log('Observer disconnected.');
         }, 2000);
       }, 1000);
-  
+
       phCards.forEach((card) => {
         const cardTitle = card.querySelector('.h3');
-        const originalFontSize = window.getComputedStyle(cardTitle).fontSize; // Получаем исходный размер h3
-  
+        const originalFontSize = window.getComputedStyle(cardTitle).fontSize;
+
         card.addEventListener('click', function () {
-          // Удаляем класс is--active у всех карточек
           phCards.forEach((c) => c.classList.remove('is--active'));
-  
-          // Возвращаем всем заголовкам их исходный размер
+
           phCards.forEach((c) => {
             const title = c.querySelector('.h3');
             gsap.to(title, {
@@ -324,22 +335,19 @@ function init() {
               ease: 'power1.out',
             });
           });
-  
-          // Добавляем класс is--active к текущей карточке
+
           card.classList.add('is--active');
-  
-          // Увеличиваем размер h3
+
           gsap.to(cardTitle, {
             fontSize: '3em',
             duration: 0.4,
             ease: 'power1.out',
           });
-  
+
           ScrollTrigger.refresh();
         });
       });
-  
-      // Support - анимация .charity_content
+
       const supTl = gsap.timeline({
         scrollTrigger: {
           trigger: '.section_charity',
@@ -348,7 +356,7 @@ function init() {
           scrub: 2,
         },
       });
-  
+
       supTl.to(
         '.charity_content',
         {
@@ -360,7 +368,7 @@ function init() {
       );
     }
   );
-  
+
 /* ======== Our Focus ========*/
 
 
