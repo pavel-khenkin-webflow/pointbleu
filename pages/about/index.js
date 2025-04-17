@@ -185,18 +185,12 @@ function init() {
     phTitle.chars.forEach(char => {
       // Базовые стили для кернинга и рендеринга
       Object.assign(char.style, {
-        display: 'inline',
-        fontKerning: 'normal',
-        fontFeatureSettings: '"kern", "liga", "clig", "calt"',
-        WebkitFontSmoothing: 'antialiased',
-        textRendering: 'optimizeLegibility',
-        whiteSpace: 'pre',
-        letterSpacing: 'normal'
+        display: 'inline-block',
       });
     
       // Доп. отступ только для точки
       if (char.textContent === '.') {
-        char.style.marginLeft = '-0.08em';
+        char.style.marginLeft = '-0.125em';
       }
     });
     
@@ -246,7 +240,7 @@ function init() {
       isDesktop: '(min-width: 767px)',
     },
     (context) => {
-      phCards[2].classList.add('is--active');
+      phCards[0].classList.add('is--active');
 
       phCards.forEach((card) => {
         const cardTitle = card.querySelector('.h3');
