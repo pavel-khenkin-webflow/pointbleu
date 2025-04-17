@@ -152,53 +152,7 @@ function init() {
     };
   }
   
-  // // Design THAT LEVATES...=============
-  // const split = new SplitText(".text-128", {
-  //   type: "chars",
-  //   charsClass: "char", // добавим класс для стилизации
-  //   tag: "span"
-  // });
-
-  // // Добавим стили для восстановления кернинга и типографики
-  // split.chars.forEach((char) => {
-  //   Object.assign(char.style, {
-  //     display: "inline",
-  //   });
-
-  //   // Доп. отступ только для точки
-  //   if (char.textContent === '.') {
-  //     char.style.marginLeft = '-0.125em';
-  //   }
-  // });
-
-
-  // mm.add(
-  //   {
-  //     isMobile: "(max-width: 479px)",
-  //     isDesktop: "(min-width: 480px)",
-  //   },
-  //   (context) => {
-  //     let { isMobile } = context.conditions;
-
-  //     gsap.to(
-  //       split.chars,
-  //       {
-  //         color: "#3B52FB",
-  //         opacity: 1,
-  //         y: 0,
-  //         stagger: 0.05,
-  //         ease: "power2.out",
-  //         scrollTrigger: {
-  //           trigger: ".section_mind",
-  //           start: isMobile ? "top 25%" : "top center",
-  //           end: isMobile ? "bottom 50%" : "bottom center",
-  //           toggleActions: "play none none reverse",
-  //           scrub: 1,
-  //         },
-  //       }
-  //     );
-  //   }
-  // );
+  // Design THAT LEVATES...=============
   mm.add(
     {
       isMobile: "(max-width: 479px)",
@@ -240,7 +194,7 @@ function init() {
   
         split.chars.forEach((char) => {
           Object.assign(char.style, {
-            display: "inline-block",
+            display: "inline",
           });
   
           if (char.textContent === ".") {

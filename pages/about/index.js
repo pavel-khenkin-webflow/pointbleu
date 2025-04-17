@@ -185,7 +185,7 @@ function init() {
     phTitle.chars.forEach(char => {
       // Базовые стили для кернинга и рендеринга
       Object.assign(char.style, {
-        display: 'inline-block',
+        display: 'inline',
       });
     
       // Доп. отступ только для точки
@@ -213,7 +213,7 @@ function init() {
     phTitleMobile.chars.forEach(char => {
       if (char.textContent === '.') {
         char.style.marginLeft = '-0.08em';
-        char.style.display = 'inline-block';
+        char.style.display = 'inline';
 
       }
     });
