@@ -159,9 +159,17 @@ function init() {
     tag: "span"
   });
 
-  // Обязательно устанавливаем display: inline для каждого символа
+  // Добавим стили для восстановления кернинга и типографики
   split.chars.forEach((char) => {
-    char.style.display = "inline";
+    Object.assign(char.style, {
+      display: "inline",
+      fontKerning: "normal",
+      fontFeatureSettings: '"kern", "liga", "clig", "calt"',
+      WebkitFontSmoothing: "antialiased",
+      textRendering: "optimizeLegibility",
+      whiteSpace: "pre",
+      letterSpacing: "normal"
+    });
   });
 
 

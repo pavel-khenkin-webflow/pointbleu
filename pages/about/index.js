@@ -176,14 +176,30 @@ function init() {
   updateMindTitlePosition();
   
   if (!isMobile) {
-    const phTitle = new SplitText('[da="about-title"]', { type: 'words, chars', tag: 'span' });
-  
-    // Применяем отступ к символам с точкой
+    const phTitle = new SplitText('[da="about-title"]', { 
+      type: 'words, chars', 
+      tag: 'span' 
+    });
+    
+    // Применяем стили ко всем символам
     phTitle.chars.forEach(char => {
+      // Базовые стили для кернинга и рендеринга
+      Object.assign(char.style, {
+        display: 'inline',
+        fontKerning: 'normal',
+        fontFeatureSettings: '"kern", "liga", "clig", "calt"',
+        WebkitFontSmoothing: 'antialiased',
+        textRendering: 'optimizeLegibility',
+        whiteSpace: 'pre',
+        letterSpacing: 'normal'
+      });
+    
+      // Доп. отступ только для точки
       if (char.textContent === '.') {
         char.style.marginLeft = '-0.08em';
       }
     });
+    
   
     gsap.timeline({
       scrollTrigger: {
