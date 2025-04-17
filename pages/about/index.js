@@ -213,6 +213,8 @@ function init() {
     phTitleMobile.chars.forEach(char => {
       if (char.textContent === '.') {
         char.style.marginLeft = '-0.08em';
+        char.style.display = 'inline-block';
+
       }
     });
   
